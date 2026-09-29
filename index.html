@@ -43,9 +43,21 @@ input[readonly],select:disabled{background:#f1f3f5;color:#333}
 .header-title h1{font-size:15px}.header-title h2{font-size:13px}.header-title p{font-size:10px}
 .info-grid{grid-template-columns:1fr}.card{padding:18px}
 }
+
+/* MODE UJIAN KETAT */
+#securityWarning{
+  display:none;position:fixed;left:50%;top:18px;transform:translateX(-50%);
+  z-index:99998;background:#fff3cd;color:#664d03;border:1px solid #ffecb5;
+  border-radius:12px;padding:13px 18px;box-shadow:0 6px 20px rgba(0,0,0,.18);
+  width:min(92%,520px);text-align:center;font-weight:bold;line-height:1.4;
+}
+
 </style>
 </head>
 <body>
+
+<div id="securityWarning">⚠️ Jangan keluar dari halaman ujian. Jika kamu keluar lagi, ujian akan dikunci.</div>
+
 <div class="container">
 
 <div class="header">
@@ -401,6 +413,9 @@ if(!absen){alert("Silakan pilih No. Absen terlebih dahulu.");return}
 if(!nama){alert("Nama belum muncul.");return}
 document.getElementById("startPage").classList.remove("active");
 document.getElementById("examPage").classList.add("active");
+ujianAktif=true;
+pelanggaranKeluar=0;
+ujianTerkunci=false;
 window.scrollTo({top:0,behavior:"smooth"});
 updateProgress();
 }
@@ -435,6 +450,7 @@ return poin;
 }
 
 async function kumpulkanUjian(){
+sedangMengumpulkan=true;
 const konfirmasi=confirm("Apakah kamu yakin ingin mengumpulkan jawaban? Setelah dikumpulkan, jawaban tidak dapat diubah.");
 if(!konfirmasi)return;
 
@@ -535,8 +551,154 @@ div.innerHTML=`<strong>Soal ${i}</strong><p>Jawaban kamu: <strong>${jawaban.trim
 review.appendChild(div);
 }
 }
+
+/* =========================
+   MODE UJIAN KETAT - HP
+   ========================= */
+let ujianAktif = false;
+let pelanggaranKeluar = 0;
+let ujianTerkunci = false;
+let sedangMengumpulkan = false;
+
+function tampilkanPeringatanKeamanan(){
+  const w=document.getElementById("securityWarning");
+  if(!w)return;
+  w.style.display="block";
+  clearTimeout(window.__warningTimer);
+  window.__warningTimer=setTimeout(()=>{w.style.display="none"},5000);
+}
+
+function kunciUjian(){
+  ujianTerkunci=true;
+  const overlay=document.getElementById("securityOverlay");
+  if(overlay) overlay.style.display="flex";
+
+  // Nonaktifkan semua input dan tombol pada halaman ujian.
+  const form=document.getElementById("examForm");
+  if(form){
+    form.querySelectorAll("input, textarea, button, select").forEach(el=>{
+      el.disabled=true;
+    });
+  }
+  // Hentikan interaksi dengan halaman ujian.
+  document.body.style.overflow="hidden";
+}
+
+
+function bukaDenganPassword(){
+  const password=document.getElementById("guruPassword").value;
+  const error=document.getElementById("passwordError");
+
+  if(password==="vascodagama"){
+    ujianTerkunci=false;
+    ujianAktif=true;
+    pelanggaranKeluar=0;
+
+    const overlay=document.getElementById("securityOverlay");
+    if(overlay) overlay.style.display="none";
+
+    const input=document.getElementById("guruPassword");
+    if(input) input.value="";
+    if(error) error.style.display="none";
+
+    const form=document.getElementById("examForm");
+    if(form){
+      form.querySelectorAll("input, textarea, button, select").forEach(el=>{
+        el.disabled=false;
+      });
+    }
+    document.body.style.overflow="";
+    updateProgress();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }else{
+    if(error) error.style.display="block";
+  }
+}
+
+function deteksiKeluarHalaman(){
+  if(!ujianAktif || ujianTerkunci || sedangMengumpulkan)return;
+
+  // Hanya menghitung saat halaman benar-benar tidak terlihat.
+  if(document.visibilityState==="hidden"){
+    pelanggaranKeluar++;
+    if(pelanggaranKeluar===1){
+      tampilkanPeringatanKeamanan();
+      alert("⚠️ Peringatan pertama!\n\nJangan keluar dari halaman ujian atau membuka aplikasi/browser lain untuk mencari jawaban.\n\nJika kamu keluar lagi, ujian akan dikunci.");
+    }else{
+      kunciUjian();
+      alert("Ujian dikunci karena kamu keluar dari halaman ujian lebih dari satu kali. Kamu boleh login lagi dan mengulang ujian.");
+    }
+  }
+}
+
+document.addEventListener("visibilitychange",deteksiKeluarHalaman);
+
+// Deteksi kehilangan fokus browser pada perangkat yang mendukungnya.
+// Tidak dihitung sendiri agar tidak menghukum sentuhan yang tidak sengaja.
+window.addEventListener("blur",()=>{
+  if(!ujianAktif || ujianTerkunci || sedangMengumpulkan)return;
+  // visibilitychange menjadi sumber utama perhitungan.
+});
+
+// Mencegah menu klik kanan dan beberapa shortcut.
+document.addEventListener("contextmenu",e=>{
+  if(ujianAktif){e.preventDefault();}
+});
+
+document.addEventListener("copy",e=>{
+  if(ujianAktif){e.preventDefault();}
+});
+document.addEventListener("cut",e=>{
+  if(ujianAktif){e.preventDefault();}
+});
+document.addEventListener("paste",e=>{
+  if(ujianAktif){e.preventDefault();}
+});
+
+document.addEventListener("keydown",e=>{
+  if(!ujianAktif)return;
+  const key=e.key.toLowerCase();
+
+  // Shortcut umum untuk mencari/menyalin/membuka alat developer.
+  if(
+    e.ctrlKey || e.metaKey ||
+    key==="f12" ||
+    (e.ctrlKey && ["c","v","x","u","f","r","l","t","w","n"].includes(key)) ||
+    (e.metaKey && ["c","v","x","u","f","r","l","t","w","n"].includes(key))
+  ){
+    e.preventDefault();
+  }
+});
+
+// Peringatan ketika mencoba meninggalkan/reload halaman.
+window.addEventListener("beforeunload",e=>{
+  if(ujianAktif && !ujianTerkunci && !sedangMengumpulkan){
+    e.preventDefault();
+    e.returnValue="";
+  }
+});
+
+
 document.addEventListener("change",updateProgress);
 document.addEventListener("input",updateProgress);
 </script>
+
+<div id="securityOverlay" style="display:none;position:fixed;inset:0;background:rgba(16,42,67,.97);z-index:99999;color:#fff;align-items:center;justify-content:center;text-align:center;padding:25px;">
+  <div style="max-width:520px;background:#fff;color:#172033;border-radius:18px;padding:28px;box-shadow:0 10px 40px rgba(0,0,0,.3)">
+    <div style="font-size:48px;margin-bottom:10px;">🔒</div>
+    <h2 style="margin:0 0 10px;color:#102a43;">UJIAN TERKUNCI</h2>
+    <p style="line-height:1.6;margin:0 0 18px;">
+      Kamu keluar dari halaman ujian lebih dari satu kali.
+      Hubungi Bu Guru untuk mendapatkan izin melanjutkan ujian.
+    </p>
+    <input id="guruPassword" type="password" placeholder="Masukkan password dari Bu Guru"
+      style="margin-bottom:10px;text-align:center;">
+    <button class="btn btn-primary" onclick="bukaDenganPassword()">BUKA UJIAN</button>
+    <p id="passwordError" style="display:none;color:#c0392b;font-weight:bold;margin:12px 0 0;">
+      Password salah.
+    </p>
+  </div>
+</div>
+
 </body>
 </html>
