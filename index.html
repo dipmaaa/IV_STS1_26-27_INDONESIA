@@ -1,0 +1,564 @@
+html = r'''<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STS Gasal Bahasa Indonesia Kelas IV</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7;color:#172033}
+.container{max-width:950px;margin:25px auto;padding:0 15px}
+.header{background:#102a43;border-radius:14px;overflow:hidden;margin-bottom:20px;box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.brand{display:flex;align-items:center;justify-content:center;gap:25px;padding:18px 25px;border-bottom:4px solid #d4af37}
+.logo-img{width:72px;height:72px;object-fit:contain;flex-shrink:0}
+.header-title{text-align:center;flex:1;color:white}
+.header-title h1{margin:0;font-size:22px;letter-spacing:.5px}
+.header-title h2{margin:6px 0;font-size:18px;font-weight:bold}
+.header-title p{margin:0;font-size:14px;color:#e8edf3}
+.card{background:white;border-radius:16px;padding:25px;margin-bottom:20px;box-shadow:0 4px 18px rgba(0,0,0,.07)}
+.welcome{text-align:center}.welcome h2{margin-top:0;color:#102a43}#welcomeName{color:#1769aa}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.info-box{background:#f3f6fa;border:1px solid #e1e7ee;border-radius:12px;padding:15px;text-align:center}
+.info-box strong{display:block;font-size:24px;color:#102a43}.info-box span{font-size:13px;color:#666}
+.form-group{margin-bottom:17px}.form-group label{display:block;font-weight:bold;margin-bottom:7px}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid #ccd5df;border-radius:9px;font-size:15px;font-family:inherit}
+input[readonly],select:disabled{background:#f1f3f5;color:#333}
+.btn{border:none;padding:13px 25px;border-radius:9px;font-size:15px;font-weight:bold;cursor:pointer}
+.btn-primary{background:#102a43;color:white}.btn-primary:hover{background:#0b2033}
+.btn-success{background:#18794e;color:white}.btn-success:hover{background:#12613e}
+.progress-area{margin-bottom:20px}.progress-info{display:flex;justify-content:space-between;font-size:14px;margin-bottom:7px}
+.progress-bar{width:100%;height:9px;background:#dce3ea;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:#102a43;transition:.3s}
+.question{background:#f8fafc;border:1px solid #e0e6ed;border-radius:12px;padding:18px;margin-bottom:17px}
+.question-title{font-weight:bold;margin-bottom:13px;line-height:1.7}
+.option{display:block;padding:9px 10px;margin:5px 0;border-radius:7px;cursor:pointer;line-height:1.5}
+.option:hover{background:#edf2f7}.option input{width:auto;margin-right:8px}
+.result-box{text-align:center}.score{font-size:55px;font-weight:bold;color:#102a43;margin:10px 0}
+.result-detail{background:#f4f7fa;border-radius:12px;padding:18px;margin-top:20px}.result-detail p{margin:8px 0}
+.review-item{border:1px solid #dce3ea;border-radius:10px;padding:15px;margin-bottom:12px}
+.correct{color:#18794e;font-weight:bold}.wrong{color:#c0392b;font-weight:bold}
+.page{display:none}.page.active{display:block}
+@media(max-width:650px){
+.container{margin-top:10px}.brand{gap:8px;padding:15px 10px}.logo-img{width:55px;height:55px}
+.header-title h1{font-size:15px}.header-title h2{font-size:13px}.header-title p{font-size:10px}
+.info-grid{grid-template-columns:1fr}.card{padding:18px}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="header">
+<div class="brand">
+<img src="logo-lamongan.png" class="logo-img" alt="Logo Lamongan">
+<div class="header-title">
+<h1>SUMATIF TENGAH SEMESTER GASAL</h1>
+<h2>SDN 1 SENDANGREJO</h2>
+<p>TAHUN PELAJARAN 2026/2027</p>
+</div>
+<img src="logo-sekolah.png" class="logo-img" alt="Logo SDN 1 Sendangrejo">
+</div>
+</div>
+
+<div id="startPage" class="page active">
+<div class="card welcome">
+<h2>Selamat Datang, <span id="welcomeName">Peserta Didik!</span></h2>
+<p>Silakan pilih nomor absen untuk melanjutkan ujian.</p>
+</div>
+
+<div class="card">
+<div class="info-grid">
+<div class="info-box"><strong>15</strong><span>Pilihan Ganda</span></div>
+<div class="info-box"><strong>10</strong><span>Isian Singkat</span></div>
+<div class="info-box"><strong>5</strong><span>Uraian</span></div>
+</div>
+
+<div class="form-group">
+<label for="absen">No. Absen</label>
+<select id="absen" onchange="pilihAbsen()">
+<option value="">-- Pilih No. Absen --</option>
+<option value="1">1</option><option value="2">2</option><option value="3">3</option>
+<option value="4">4</option><option value="5">5</option><option value="6">6</option>
+<option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="nama">Nama Lengkap</label>
+<input type="text" id="nama" readonly placeholder="Nama akan muncul otomatis">
+</div>
+
+<div class="form-group">
+<label for="kelas">Kelas / Fase</label>
+<select id="kelas" disabled><option value="IV / B">IV / B</option></select>
+</div>
+
+<div class="form-group">
+<label for="mapel">Mata Pelajaran</label>
+<select id="mapel" disabled><option value="Bahasa Indonesia">Bahasa Indonesia</option></select>
+</div>
+
+<div style="text-align:center;margin-top:25px;">
+<button class="btn btn-primary" onclick="mulaiUjian()">MULAI UJIAN</button>
+</div>
+</div>
+</div>
+
+<div id="examPage" class="page">
+<div class="card">
+<div class="progress-area">
+<div class="progress-info">
+<span id="progressText">0 / 30 soal terjawab</span><span>Progress</span>
+</div>
+<div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+</div>
+
+<form id="examForm">
+
+<h2>Pilihan Ganda</h2>
+
+<div class="question"><div class="question-title">
+1. Perhatikan kalimat berikut!<br><br>
+<b>Rani membaca buku cerita di perpustakaan.</b><br><br>
+Kalimat tersebut termasuk kalimat ....
+</div>
+<label class="option"><input type="radio" name="q1" value="A">A. intransitif karena tidak memiliki objek</label>
+<label class="option"><input type="radio" name="q1" value="B">B. transitif karena memiliki objek</label>
+<label class="option"><input type="radio" name="q1" value="C">C. intransitif karena memiliki keterangan</label>
+<label class="option"><input type="radio" name="q1" value="D">D. transitif karena memiliki kata kerja</label>
+</div>
+
+<div class="question"><div class="question-title">
+2. Perhatikan kalimat berikut!<br><br>
+<b>Adik tertawa terbahak-bahak di ruang tamu.</b><br><br>
+Alasan kalimat tersebut termasuk kalimat intransitif adalah ....
+</div>
+<label class="option"><input type="radio" name="q2" value="A">A. memiliki kata kerja tertawa</label>
+<label class="option"><input type="radio" name="q2" value="B">B. memiliki keterangan tempat</label>
+<label class="option"><input type="radio" name="q2" value="C">C. tidak membutuhkan objek setelah kata kerja</label>
+<label class="option"><input type="radio" name="q2" value="D">D. memiliki subjek berupa Adik</label>
+</div>
+
+<div class="question"><div class="question-title">
+3. Kalimat berikut yang menggunakan tanda baca dengan tepat adalah ....
+</div>
+<label class="option"><input type="radio" name="q3" value="A">A. Ibu berkata "Jangan lupa membawa payung!"</label>
+<label class="option"><input type="radio" name="q3" value="B">B. Ibu berkata, "Jangan lupa membawa payung!"</label>
+<label class="option"><input type="radio" name="q3" value="C">C. Ibu berkata "Jangan lupa membawa payung".</label>
+<label class="option"><input type="radio" name="q3" value="D">D. Ibu berkata, "Jangan lupa membawa payung".</label>
+</div>
+
+<div class="question"><div class="question-title">
+4. Perhatikan percakapan berikut!<br><br>
+Dito: "Mengapa kamu tidak ikut bermain?"<br>
+Raka: "Aku tidak berani melihat ketinggian. Aku memiliki ...."<br><br>
+Kata yang tepat untuk melengkapi percakapan tersebut adalah ....
+</div>
+<label class="option"><input type="radio" name="q4" value="A">A. hobi</label>
+<label class="option"><input type="radio" name="q4" value="B">B. fobia</label>
+<label class="option"><input type="radio" name="q4" value="C">C. gawai</label>
+<label class="option"><input type="radio" name="q4" value="D">D. kultural</label>
+</div>
+
+<div class="question"><div class="question-title">
+5. Sekolah Sinta sedang memperbaiki ruang kelas yang sudah rusak. Dinding dicat ulang dan beberapa bagian atap diperbaiki.<br><br>
+Kegiatan tersebut disebut ....
+</div>
+<label class="option"><input type="radio" name="q5" value="A">A. renovasi</label>
+<label class="option"><input type="radio" name="q5" value="B">B. daring</label>
+<label class="option"><input type="radio" name="q5" value="C">C. luring</label>
+<label class="option"><input type="radio" name="q5" value="D">D. kultural</label>
+</div>
+
+<div class="question"><div class="question-title">
+6. Perhatikan kalimat berikut!<br><br>
+<b>Karena hujan deras, kegiatan belajar dilakukan secara daring.</b><br><br>
+Makna kata <i>daring</i> pada kalimat tersebut adalah ....
+</div>
+<label class="option"><input type="radio" name="q6" value="A">A. belajar secara langsung di kelas</label>
+<label class="option"><input type="radio" name="q6" value="B">B. belajar menggunakan jaringan internet</label>
+<label class="option"><input type="radio" name="q6" value="C">C. belajar tanpa menggunakan alat elektronik</label>
+<label class="option"><input type="radio" name="q6" value="D">D. belajar bersama-sama di halaman sekolah</label>
+</div>
+
+<div class="question"><div class="question-title">
+7. Bacalah teks berikut!<br><br>
+Pagi itu, Sasa datang ke sekolah lebih awal. Ia melihat halaman sekolah penuh dengan daun kering. Sasa ingin segera membersihkannya, tetapi ia harus mengikuti upacara terlebih dahulu. Setelah upacara selesai, Sasa mengajak beberapa temannya membersihkan halaman bersama-sama.<br><br>
+Masalah yang dihadapi Sasa adalah ....
+</div>
+<label class="option"><input type="radio" name="q7" value="A">A. Sasa datang terlambat ke sekolah</label>
+<label class="option"><input type="radio" name="q7" value="B">B. Sasa tidak membawa alat kebersihan</label>
+<label class="option"><input type="radio" name="q7" value="C">C. halaman sekolah penuh daun kering</label>
+<label class="option"><input type="radio" name="q7" value="D">D. Sasa tidak mau mengikuti upacara</label>
+</div>
+
+<div class="question"><div class="question-title">
+8. Berdasarkan teks pada soal nomor 7, sifat Sasa yang dapat diteladani adalah ....
+</div>
+<label class="option"><input type="radio" name="q8" value="A">A. peduli terhadap lingkungan</label>
+<label class="option"><input type="radio" name="q8" value="B">B. suka datang terlambat</label>
+<label class="option"><input type="radio" name="q8" value="C">C. mudah menyerah</label>
+<label class="option"><input type="radio" name="q8" value="D">D. tidak suka bekerja sama</label>
+</div>
+
+<div class="question"><div class="question-title">
+9. Bacalah paragraf berikut!<br><br>
+Indonesia memiliki banyak makanan tradisional. Setiap daerah mempunyai makanan dengan bahan dan cara pengolahan yang berbeda. Misalnya, Jawa Timur memiliki rawon, sedangkan Sumatra Barat terkenal dengan rendang. Makanan tradisional tersebut merupakan bagian dari kekayaan budaya Indonesia.<br><br>
+Ide pokok paragraf tersebut adalah ....
+</div>
+<label class="option"><input type="radio" name="q9" value="A">A. rawon merupakan makanan Jawa Timur</label>
+<label class="option"><input type="radio" name="q9" value="B">B. setiap daerah memiliki makanan yang berbeda</label>
+<label class="option"><input type="radio" name="q9" value="C">C. Indonesia memiliki banyak makanan tradisional</label>
+<label class="option"><input type="radio" name="q9" value="D">D. rendang berasal dari Sumatra Barat</label>
+</div>
+
+<div class="question"><div class="question-title">
+10. Perhatikan kalimat berikut!<br><br>
+Ayah membeli <b>buku</b> tulis untuk Raka.<br>
+Raka memukul <b>buku</b> jarinya karena tidak sengaja terkena meja.<br><br>
+Kata <b>buku</b> pada kedua kalimat tersebut merupakan contoh ....
+</div>
+<label class="option"><input type="radio" name="q10" value="A">A. sinonim</label>
+<label class="option"><input type="radio" name="q10" value="B">B. antonim</label>
+<label class="option"><input type="radio" name="q10" value="C">C. homonim</label>
+<label class="option"><input type="radio" name="q10" value="D">D. kata berimbuhan</label>
+</div>
+
+<div class="question"><div class="question-title">
+11. Bacalah kalimat berikut!<br><br>
+Setelah meja dirapikan, para siswa duduk <b>rapat</b>.<br>
+Kepala sekolah sedang mengikuti <b>rapat</b> bersama para guru.<br><br>
+Makna kata <b>rapat</b> pada kedua kalimat tersebut adalah ....
+</div>
+<label class="option"><input type="radio" name="q11" value="A">A. sama</label>
+<label class="option"><input type="radio" name="q11" value="B">B. berbeda</label>
+<label class="option"><input type="radio" name="q11" value="C">C. berlawanan</label>
+<label class="option"><input type="radio" name="q11" value="D">D. tidak memiliki arti</label>
+</div>
+
+<div class="question"><div class="question-title">
+12. Perhatikan kalimat berikut!<br><br>
+<b>Petugas itu ___ tulisan yang salah di papan tulis.</b><br><br>
+Kata berawalan <i>me-</i> yang tepat untuk melengkapi kalimat tersebut adalah ....
+</div>
+<label class="option"><input type="radio" name="q12" value="A">A. menghapus</label>
+<label class="option"><input type="radio" name="q12" value="B">B. menhapus</label>
+<label class="option"><input type="radio" name="q12" value="C">C. memhapus</label>
+<label class="option"><input type="radio" name="q12" value="D">D. mehapus</label>
+</div>
+
+<div class="question"><div class="question-title">
+13. Perhatikan kalimat berikut!<br><br>
+<b>Setiap pagi, Rani ___ halaman rumah.</b><br><br>
+Kata yang tepat untuk melengkapi kalimat tersebut adalah ....
+</div>
+<label class="option"><input type="radio" name="q13" value="A">A. mensapu</label>
+<label class="option"><input type="radio" name="q13" value="B">B. menyapu</label>
+<label class="option"><input type="radio" name="q13" value="C">C. mengsapu</label>
+<label class="option"><input type="radio" name="q13" value="D">D. memsapu</label>
+</div>
+
+<div class="question"><div class="question-title">
+14. Perhatikan kalimat berikut!<br><br>
+<b>Raka membawa buku ke perpustakaan.</b><br><br>
+Kalimat tersebut termasuk kalimat transitif karena ....
+</div>
+<label class="option"><input type="radio" name="q14" value="A">A. memiliki keterangan tempat</label>
+<label class="option"><input type="radio" name="q14" value="B">B. memiliki subjek dan predikat</label>
+<label class="option"><input type="radio" name="q14" value="C">C. kata kerjanya membutuhkan objek</label>
+<label class="option"><input type="radio" name="q14" value="D">D. tidak memiliki objek</label>
+</div>
+
+<div class="question"><div class="question-title">
+15. Bacalah kalimat berikut!<br><br>
+Di desa tempat tinggal Rara, masyarakat masih menggunakan bahan alami untuk membuat kerajinan dan mengajarkan cara membuatnya kepada anak-anak. Kegiatan tersebut merupakan contoh ....
+</div>
+<label class="option"><input type="radio" name="q15" value="A">A. daring</label>
+<label class="option"><input type="radio" name="q15" value="B">B. gawai</label>
+<label class="option"><input type="radio" name="q15" value="C">C. kearifan lokal</label>
+<label class="option"><input type="radio" name="q15" value="D">D. renovasi</label>
+</div>
+
+<h2>Isian Singkat</h2>
+
+<div class="question"><div class="question-title">16. Kalimat yang membutuhkan objek setelah kata kerja disebut kalimat __________.</div><input type="text" name="q16"></div>
+<div class="question"><div class="question-title">17. Kalimat "Dina tersenyum bahagia." termasuk kalimat __________.</div><input type="text" name="q17"></div>
+<div class="question"><div class="question-title">18. Tanda baca yang digunakan pada akhir kalimat tanya adalah tanda __________.</div><input type="text" name="q18"></div>
+<div class="question"><div class="question-title">19. Kegiatan belajar yang dilakukan secara langsung di sekolah tanpa menggunakan internet disebut __________.</div><input type="text" name="q19"></div>
+<div class="question"><div class="question-title">20. Alat elektronik seperti telepon pintar atau tablet yang sering digunakan untuk mencari informasi disebut __________.</div><input type="text" name="q20"></div>
+<div class="question"><div class="question-title">21. Rasa takut yang berlebihan terhadap sesuatu disebut __________.</div><input type="text" name="q21"></div>
+<div class="question"><div class="question-title">22. Orang yang mengalami peristiwa atau menghadapi masalah dalam sebuah cerita disebut __________.</div><input type="text" name="q22"></div>
+<div class="question"><div class="question-title">23. Gagasan utama yang menjadi dasar pembahasan sebuah paragraf disebut __________.</div><input type="text" name="q23"></div>
+<div class="question"><div class="question-title">24. Kata yang memiliki bentuk tulisan atau bunyi sama tetapi maknanya berbeda disebut __________.</div><input type="text" name="q24"></div>
+<div class="question"><div class="question-title">25. Kata dasar <b>hapus</b> jika diberi awalan <i>me-</i> menjadi __________.</div><input type="text" name="q25"></div>
+
+<h2>Uraian</h2>
+
+<div class="question"><div class="question-title">
+26. Perhatikan kalimat berikut!<br><br>
+<b>Rina membaca buku di kamar.</b><br><br>
+a. Apakah kalimat tersebut termasuk transitif atau intransitif?<br>
+b. Tuliskan objek dalam kalimat tersebut!
+</div><textarea name="q26" rows="5"></textarea></div>
+
+<div class="question"><div class="question-title">
+27. Buatlah satu kalimat transitif menggunakan kata <b>membawa</b>!
+</div><textarea name="q27" rows="5"></textarea></div>
+
+<div class="question"><div class="question-title">
+28. Bacalah teks berikut!<br><br>
+Andi ingin bermain sepak bola bersama teman-temannya. Namun, hujan turun sangat deras. Andi merasa kecewa karena tidak dapat bermain di lapangan. Ia kemudian mengajak teman-temannya bermain permainan papan di rumah.<br><br>
+Apa konflik yang dialami Andi dan bagaimana cara Andi menyelesaikannya?
+</div><textarea name="q28" rows="5"></textarea></div>
+
+<div class="question"><div class="question-title">
+29. Bacalah paragraf berikut!<br><br>
+Membaca buku memiliki banyak manfaat. Dengan membaca, kita dapat memperoleh pengetahuan baru. Membaca juga dapat menambah kosakata dan melatih kemampuan berpikir. Oleh karena itu, kita sebaiknya membiasakan diri membaca setiap hari.<br><br>
+Tuliskan ide pokok paragraf tersebut!
+</div><textarea name="q29" rows="5"></textarea></div>
+
+<div class="question"><div class="question-title">
+30. Buatlah kalimat dengan menggunakan kata-kata berawalan <i>me-</i> berikut!<br><br>
+a. <b>sapu</b><br>
+b. <b>tulis</b>
+</div><textarea name="q30" rows="5"></textarea></div>
+
+<div style="text-align:center;margin-top:30px;">
+<button type="button" class="btn btn-success" onclick="kumpulkanUjian()">KUMPULKAN JAWABAN</button>
+</div>
+</form>
+</div>
+</div>
+
+<div id="resultPage" class="page">
+<div class="card result-box">
+<h2>Ujian Selesai 🎉</h2>
+<p id="resultName"></p>
+<div class="score" id="finalScore">0</div>
+<p>Nilai Akhir</p>
+<div class="result-detail">
+<p><strong>Benar Pilihan Ganda:</strong> <span id="pgBenar"></span> / 15</p>
+<p><strong>Benar Isian:</strong> <span id="isianBenar"></span> / 10</p>
+<p><strong>Poin Uraian:</strong> <span id="uraianPoin"></span></p>
+</div>
+</div>
+<div class="card"><h2>Review Jawaban</h2><div id="review"></div></div>
+</div>
+
+</div>
+
+<script>
+const FORMSPREE_ENDPOINT="https://formspree.io/f/xzezyvav";
+
+const siswa={
+"1":"Achmad Naufal Putra Yulianto",
+"2":"Aldo Syarul Ramdhan",
+"3":"Danish Raffa Faizan",
+"4":"Fabian Arrafif",
+"5":"Meli Anggraini",
+"6":"Muhammad Daffa Al Baihaqi",
+"7":"Nadhira Azkadina Putri",
+"8":"Nur Azizah",
+"9":"Raffasya Ali Alfarizqi",
+"10":"Assyfa Putri Zahrany"
+};
+
+const kunciPG={
+q1:"B",q2:"C",q3:"B",q4:"B",q5:"A",q6:"B",q7:"C",q8:"A",
+q9:"C",q10:"C",q11:"B",q12:"A",q13:"B",q14:"C",q15:"C"
+};
+
+const kunciIsian={
+q16:["transitif"],
+q17:["intransitif"],
+q18:["tanda tanya","?"],
+q19:["luring"],
+q20:["gawai"],
+q21:["fobia"],
+q22:["tokoh"],
+q23:["ide pokok","gagasan pokok"],
+q24:["homonim"],
+q25:["menghapus"]
+};
+
+const rubrikUraian={
+q26:[["transitif"],["buku"]],
+q27:[["membawa"]],
+q28:[["hujan","hujan deras"],["tidak dapat bermain sepak bola","tidak bisa bermain sepak bola"],["bermain permainan papan","permainan papan"]],
+q29:[["membaca buku memiliki banyak manfaat","manfaat membaca buku"]],
+q30:[["menyapu"],["menulis"]]
+};
+
+function pilihAbsen(){
+const absen=document.getElementById("absen").value;
+const nama=document.getElementById("nama");
+const welcome=document.getElementById("welcomeName");
+if(absen&&siswa[absen]){nama.value=siswa[absen];welcome.textContent=siswa[absen];}
+else{nama.value="";welcome.textContent="Peserta Didik!";}
+}
+
+function mulaiUjian(){
+const absen=document.getElementById("absen").value;
+const nama=document.getElementById("nama").value;
+if(!absen){alert("Silakan pilih No. Absen terlebih dahulu.");return;}
+if(!nama){alert("Nama belum muncul.");return;}
+document.getElementById("startPage").classList.remove("active");
+document.getElementById("examPage").classList.add("active");
+window.scrollTo({top:0,behavior:"smooth"});
+updateProgress();
+}
+
+function updateProgress(){
+const form=document.getElementById("examForm");
+let answered=0;
+for(let i=1;i<=15;i++){
+if(form.querySelector(`input[name="q${i}"]:checked`))answered++;
+}
+for(let i=16;i<=30;i++){
+const input=form.querySelector(`[name="q${i}"]`);
+if(input&&input.value.trim()!=="")answered++;
+}
+const persen=(answered/30)*100;
+document.getElementById("progressText").textContent=`${answered} / 30 soal terjawab`;
+document.getElementById("progressFill").style.width=persen+"%";
+}
+
+function normalisasi(teks){
+return teks.toLowerCase().trim().replace(/\s+/g," ");
+}
+
+function cekIsian(jawaban,kunci){
+const j=normalisasi(jawaban);
+return kunci.some(item=>j===normalisasi(item));
+}
+
+function cekUraian(jawaban,rubrik){
+const j=normalisasi(jawaban);
+let poin=0;
+rubrik.forEach(kelompok=>{
+if(kelompok.some(kata=>j.includes(normalisasi(kata))))poin++;
+});
+return poin;
+}
+
+async function kumpulkanUjian(){
+const konfirmasi=confirm("Apakah kamu yakin ingin mengumpulkan jawaban? Setelah dikumpulkan, jawaban tidak dapat diubah.");
+if(!konfirmasi)return;
+
+const form=document.getElementById("examForm");
+const absen=document.getElementById("absen").value;
+const nama=document.getElementById("nama").value;
+
+let pgBenar=0;
+for(let i=1;i<=15;i++){
+const jawaban=form.querySelector(`input[name="q${i}"]:checked`);
+if(jawaban&&jawaban.value===kunciPG[`q${i}`])pgBenar++;
+}
+const nilaiPG=(pgBenar/15)*40;
+
+let isianBenar=0;
+for(let i=16;i<=25;i++){
+const input=form.querySelector(`[name="q${i}"]`);
+if(input&&cekIsian(input.value,kunciIsian[`q${i}`]))isianBenar++;
+}
+const nilaiIsian=(isianBenar/10)*30;
+
+let totalUraianPoin=0;
+let totalMaksimalUraian=0;
+for(let i=26;i<=30;i++){
+const input=form.querySelector(`[name="q${i}"]`);
+const rubrik=rubrikUraian[`q${i}`];
+totalUraianPoin+=cekUraian(input.value,rubrik);
+totalMaksimalUraian+=rubrik.length;
+}
+const nilaiUraian=(totalUraianPoin/totalMaksimalUraian)*30;
+const nilaiAkhir=Math.round(nilaiPG+nilaiIsian+nilaiUraian);
+
+document.getElementById("examPage").classList.remove("active");
+document.getElementById("resultPage").classList.add("active");
+document.getElementById("resultName").textContent=`${nama} • No. Absen ${absen}`;
+document.getElementById("finalScore").textContent=nilaiAkhir;
+document.getElementById("pgBenar").textContent=pgBenar;
+document.getElementById("isianBenar").textContent=isianBenar;
+document.getElementById("uraianPoin").textContent=`${totalUraianPoin}/${totalMaksimalUraian}`;
+buatReview();
+
+const dataJawaban={};
+for(let i=1;i<=30;i++){
+if(i<=15){
+const checked=form.querySelector(`input[name="q${i}"]:checked`);
+dataJawaban[`soal_${i}`]=checked?checked.value:"";
+}else{
+const input=form.querySelector(`[name="q${i}"]`);
+dataJawaban[`soal_${i}`]=input?input.value:"";
+}
+}
+
+try{
+await fetch(FORMSPREE_ENDPOINT,{
+method:"POST",
+headers:{"Content-Type":"application/json","Accept":"application/json"},
+body:JSON.stringify({
+nama_siswa:nama,
+no_absen:absen,
+kelas_fase:"IV / B",
+mata_pelajaran:"Bahasa Indonesia",
+nilai:nilaiAkhir,
+nilai_pg:Math.round(nilaiPG),
+nilai_isian:Math.round(nilaiIsian),
+nilai_uraian:Math.round(nilaiUraian),
+pilihan_ganda_benar:`${pgBenar}/15`,
+isian_benar:`${isianBenar}/10`,
+uraian_poin:`${totalUraianPoin}/${totalMaksimalUraian}`,
+jawaban:JSON.stringify(dataJawaban)
+})
+});
+}catch(error){
+console.log("Pengiriman Formspree gagal:",error);
+}
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function buatReview(){
+const form=document.getElementById("examForm");
+const review=document.getElementById("review");
+review.innerHTML="";
+
+for(let i=1;i<=15;i++){
+const checked=form.querySelector(`input[name="q${i}"]:checked`);
+const jawaban=checked?checked.value:"Tidak dijawab";
+const benar=jawaban===kunciPG[`q${i}`];
+const div=document.createElement("div");
+div.className="review-item";
+div.innerHTML=`<strong>Soal ${i}</strong>
+<p>Jawaban kamu: <strong>${jawaban}</strong></p>
+<p>Kunci: <strong>${kunciPG[`q${i}`]}</strong></p>
+<p class="${benar?"correct":"wrong"}">${benar?"✓ Benar":"✗ Salah"}</p>`;
+review.appendChild(div);
+}
+
+for(let i=16;i<=30;i++){
+const input=form.querySelector(`[name="q${i}"]`);
+const jawaban=input?input.value:"";
+const div=document.createElement("div");
+div.className="review-item";
+div.innerHTML=`<strong>Soal ${i}</strong>
+<p>Jawaban kamu: <strong>${jawaban.trim()?jawaban:"Tidak dijawab"}</strong></p>`;
+review.appendChild(div);
+}
+}
+
+document.addEventListener("change",updateProgress);
+document.addEventListener("input",updateProgress);
+</script>
+</body>
+</html>
+'''
+
+path = "/mnt/data/STS_Gasal_Bahasa_Indonesia_Kelas_IV_2026_2027.html"
+with open(path, "w", encoding="utf-8") as f:
+    f.write(html)
+
+print(f"File HTML selesai dibuat: {path}")
